@@ -4,6 +4,8 @@
   "CharmsBar.Start": "Start",
   "CharmsBar.Devices": "Devices",
   "CharmsBar.Settings": "Settings",
+  "CharmsClock.DateFormat.Top": "dddd",
+  "CharmsClock.DateFormat.Bottom": "M",
   "CharmsBarReloaded.Error.UpdaterMissing": "CharmsBar:Reloaded failed to open updater, indicating app instalation may be broken.\nIt is highly reccomended to reinstall CharmsBar: Reloaded",
   "CharmsSettings.On": "On",
   "CharmsSettings.Off": "Off",

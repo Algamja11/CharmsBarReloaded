@@ -67,7 +67,9 @@ namespace CharmsBarReloaded.CharmsClock
             else
                 Hours.Content = DateTime.Now.Hour;
             Minutes.Content = DateTime.Now.ToString("mm");
-            Date.Content = $"{DateTime.Today.ToString("dddd")}\n{DateTime.Today.ToString("M")}";
+            String topFormat = App.translationManager.GetTranslation("CharmsClock.DateFormat.Top");
+            String bottomFormat = App.translationManager.GetTranslation("CharmsClock.DateFormat.Bottom");
+            Date.Content = $"{DateTime.Today.ToString(topFormat)}\n{DateTime.Today.ToString(bottomFormat)}";
         }
         private void UpdateBatteryLife()
         {
