@@ -9,6 +9,7 @@
             public string TextColor { get; set; } = "ffffff";
             public bool ShowChargingOnDesktop { get; set; } = false;
             public bool SyncClockSettings { get; set; } = true;
+            public bool Use12HourFormat { get; set; } = false;
         }
     }
 }

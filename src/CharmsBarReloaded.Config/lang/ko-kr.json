@@ -34,6 +34,7 @@
   "CharmsSettings.General.CharmsBarEnabled": "참 바 활성화",
   "CharmsSettings.General.HideBarAfterClick": "버튼을 클릭한 후 참 바 숨기기",
   "CharmsSettings.General.CharmsClockEnabled": "참 시계 활성화",
+  "CharmsSettings.General.CharmsClockUse12HourFormat": "12시간제 활성화",
   "CharmsSettings.General.EnableKeyboardShortcuts": "단축 키",
   "CharmsSettings.General.KeyboardShortcutsOverrideCharmsBarOff": "비활성화된 참 바를 키보드 단축 키가 덮어쓰기",
   "CharmsSettings.General.AutomaticCheckForUpdates": "업데이트 자동 확인",

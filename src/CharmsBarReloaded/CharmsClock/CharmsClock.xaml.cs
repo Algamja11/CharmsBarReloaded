@@ -62,7 +62,10 @@ namespace CharmsBarReloaded.CharmsClock
                     break;
             }
 
-            Hours.Content = DateTime.Now.Hour;
+            if (App.charmsConfig.charmsClockConfig.Use12HourFormat)
+                Hours.Content = DateTime.Now.ToString("hh");
+            else
+                Hours.Content = DateTime.Now.Hour;
             Minutes.Content = DateTime.Now.ToString("mm");
             Date.Content = $"{DateTime.Today.ToString("dddd")}\n{DateTime.Today.ToString("M")}";
         }

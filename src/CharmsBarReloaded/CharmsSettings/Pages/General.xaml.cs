@@ -27,6 +27,7 @@ namespace CharmsBarReloaded.CharmsSettings.Pages
             BarEnabledToggle.IsChecked = App.charmsConfig.charmsBarConfig.IsEnabled;
             BarHideAfterClickToggle.IsChecked = App.charmsConfig.charmsBarConfig.HideWindowAfterClick;
             ClockEnabledToggle.IsChecked = App.charmsConfig.EnableAnimations;
+            ClockUse12HourFormat.IsChecked = App.charmsConfig.EnableAnimations;
             KeyboardShortcutsToggle.IsChecked = App.charmsConfig.EnableAnimations;
             KeyboardShortcutOverrideToggle.IsChecked = App.charmsConfig.EnableAnimations;
             AutoCheckForUpdatesToggle.IsChecked = App.charmsConfig.AutoCheckForUpdates;
@@ -140,6 +141,10 @@ namespace CharmsBarReloaded.CharmsSettings.Pages
             if (App.charmsConfig.EnableAnimations) ClockEnabledOnOff.Text = onText;
             else ClockEnabledOnOff.Text = offText;
 
+            ClockUse12HourFormatText.Text = App.translationManager.GetTranslation("CharmsSettings.General.CharmsClockUse12HourFormat");
+            if (App.charmsConfig.EnableAnimations) ClockUse12HourFormatOnOff.Text = onText;
+            else ClockUse12HourFormatOnOff.Text = offText;
+
             KeyboardShortcutsText.Text = App.translationManager.GetTranslation("CharmsSettings.General.EnableKeyboardShortcuts");
             if (App.charmsConfig.EnableAnimations) KeyboardShortcutsOnOff.Text = onText;
             else KeyboardShortcutsOnOff.Text = offText;
@@ -189,6 +194,11 @@ namespace CharmsBarReloaded.CharmsSettings.Pages
         private void ClockEnabledToggle_Checked(object sender, RoutedEventArgs e)
         {
             App.charmsConfig.charmsClockConfig.IsEnabled = (bool)ClockEnabledToggle.IsChecked;
+        }
+
+        private void ClockUse12HourFormatToggle_Checked(object sender, RoutedEventArgs e)
+        {
+            App.charmsConfig.charmsClockConfig.Use12HourFormat = (bool)ClockUse12HourFormat.IsChecked;
         }
 
         private void KeyboardShortcutsToggle_Checked(object sender, RoutedEventArgs e)

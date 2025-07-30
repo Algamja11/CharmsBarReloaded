@@ -43,6 +43,11 @@
             <TextBlock Foreground="White" FontFamily="Segoe UI Bold" Text="On/Off" MinWidth="40" Margin="10,0,10,0" x:Name="ClockEnabledOnOff"/>
             <cc:Win8Switch x:Name="ClockEnabledToggle" Click="ClockEnabledToggle_Checked"/>
         </StackPanel>
+        <TextBlock Text="ClockUse12HourFormat.IsEnabled" FontSize="20" TextWrapping="WrapWithOverflow" Foreground="White" FontFamily="Segoe UI Semilight" x:Name="ClockUse12HourFormatText" Margin="0,0,10,0"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Foreground="White" FontFamily="Segoe UI Bold" Text="On/Off" MinWidth="40" Margin="10,0,10,0" x:Name="ClockUse12HourFormatOnOff"/>
+            <cc:Win8Switch x:Name="ClockUse12HourFormat" Click="ClockUse12HourFormatToggle_Checked"/>
+        </StackPanel>
         <TextBlock Text="EnableKeyboardShortcuts" FontSize="20" TextWrapping="WrapWithOverflow" Foreground="White" FontFamily="Segoe UI Semilight" x:Name="KeyboardShortcutsText" Margin="0,0,10,0"/>
         <StackPanel Orientation="Horizontal">
             <TextBlock Foreground="White" FontFamily="Segoe UI Bold" Text="On/Off" MinWidth="40" Margin="10,0,10,0" x:Name="KeyboardShortcutsOnOff"/>

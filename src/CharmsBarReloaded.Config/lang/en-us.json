@@ -34,6 +34,7 @@
   "CharmsSettings.General.CharmsBarEnabled": "Enable Charms Bar",
   "CharmsSettings.General.HideBarAfterClick": "Hide Charms Bar after button click",
   "CharmsSettings.General.CharmsClockEnabled": "Enable Charms Clock",
+  "CharmsSettings.General.CharmsClockUse12HourFormat": "Enable 12-Hour Clock",
   "CharmsSettings.General.EnableKeyboardShortcuts": "Keyboard shortcuts",
   "CharmsSettings.General.KeyboardShortcutsOverrideCharmsBarOff": "Keyboard shortcuts override disabled Charms Bar",
   "CharmsSettings.General.AutomaticCheckForUpdates": "Check for updates automatically",
