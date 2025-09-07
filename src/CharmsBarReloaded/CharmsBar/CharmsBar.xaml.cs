@@ -18,6 +18,7 @@ namespace CharmsBarReloaded.CharmsBar
             this.Loaded += CharmsBar_Loaded;
             this.MouseEnter += (s, e) => { CharmsBar_MouseEnter(ref charmsClockRef); };
             this.MouseLeave += (s, e) => { CharmsBar_MouseLeave(ref charmsClockRef); };
+            this.MouseMove += (s, e) => { CharmsBar_MouseMove(ref charmsClockRef); };
         }
         public void HideWindow()
         {
@@ -41,6 +42,10 @@ namespace CharmsBarReloaded.CharmsBar
         public bool windowVisible;
         public bool isAnimating = false;
         public int windowWidth;
+
+        private int mouseState = 0;
+        private double lastMouseY;
+
         public void Window_Reload()
         {
             Log.Info("Reloading Charms Bar...");
@@ -62,7 +67,7 @@ namespace CharmsBarReloaded.CharmsBar
         }
         private void CharmsBar_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Top = SystemConfig.GetDesktopWorkingArea.Top + 1;
+            this.Topmost = true;
             this.Window_Reload();
             this.Left = SystemConfig.GetDesktopWorkingArea.Right - this.Width;
             this.charmsStack.Width = this.windowWidth;
@@ -72,41 +77,64 @@ namespace CharmsBarReloaded.CharmsBar
         }
         private void CharmsBar_MouseLeave(ref CharmsClock.CharmsClock charmsClock)
         {
-            HideWindow();
-            if (App.charmsConfig.EnableAnimations)
-                charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.fadeOut);
-            else
-                charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.noAnimationOut);
-            this.Top = 1;
+            if (mouseState == 2) {
+                mouseState = 0;
+                HideWindow();
+                if (App.charmsConfig.EnableAnimations)
+                    charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.fadeOut);
+                else
+                    charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.noAnimationOut);
+
+                this.Topmost = true;
+            }
         }
         private void CharmsBar_MouseEnter(ref CharmsClock.CharmsClock charmsClock)
         {
-            if (!isAnimating)
-            {
-                isAnimating = true;
-                BeginStoryboard(fadeIn);
-                if (App.charmsConfig.EnableAnimations)
-                    charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.fadeIn);
-                else
-                    charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.noAnimationIn);
-            }
-            foreach (Grid grid in charmsStack.Children)
-            {
-                foreach (var item in grid.Children)
-                {
-                    if (item.GetType() == typeof(Image))
-                    {
-                        string source = ((Image)item).Source.ToString();
-                        ((Image)item).Source = new BitmapImage(new Uri(source.Replace("Preview", "")));
-                    }
-                    if (item.GetType() == typeof(Label))
-                        ((Label)item).Visibility = Visibility.Visible;
-                    if (item.GetType() == typeof(Grid))
-                        ((Grid)item).Background = SystemConfig.GetAccentColor;
-                }
-            }
+            if (mouseState == 0) {
+                Point cursorPos = SystemConfig.GetMouseLocation;
+                lastMouseY = cursorPos.Y;
 
-            this.Top = 0;
+                mouseState = 1;
+            }
+        }
+
+        private void CharmsBar_MouseMove(ref CharmsClock.CharmsClock charmsClock) {
+            if (mouseState == 1) {
+                Point cursorPos = SystemConfig.GetMouseLocation;
+                double yOffset = Math.Abs(lastMouseY - cursorPos.Y);
+
+                if (cursorPos.X + 1 != System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width) {
+                    mouseState = 0;
+                    HideWindow();
+                }
+
+                if (cursorPos.X + 1 == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width && yOffset > 50.0) {
+                    mouseState = 2;
+
+                    if (!isAnimating) {
+                        isAnimating = true;
+                        BeginStoryboard(fadeIn);
+                        if (App.charmsConfig.EnableAnimations)
+                            charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.fadeIn);
+                        else
+                            charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.noAnimationIn);
+                    }
+                    foreach (Grid grid in charmsStack.Children) {
+                        foreach (var item in grid.Children) {
+                            if (item.GetType() == typeof(Image)) {
+                                string source = ((Image)item).Source.ToString();
+                                ((Image)item).Source = new BitmapImage(new Uri(source.Replace("Preview", "")));
+                            }
+                            if (item.GetType() == typeof(Label))
+                                ((Label)item).Visibility = Visibility.Visible;
+                            if (item.GetType() == typeof(Grid))
+                                ((Grid)item).Background = SystemConfig.GetAccentColor;
+                        }
+                    }
+                }
+
+                this.Topmost = true;
+            }
         }
 
         public void CharmsBar_Update(ref CharmsClock.CharmsClock charmsClock)
@@ -154,7 +182,7 @@ namespace CharmsBarReloaded.CharmsBar
                     }
                 }
                 this.Height = SystemParameters.PrimaryScreenHeight;
-                this.Top = 0;
+                this.Topmost = true;
             }
             if (Keyboard.IsKeyDown(Key.Escape) && App.charmsConfig.charmsBarConfig.EnableKeyboardShortcut)
             {
