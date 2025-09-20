@@ -1,18 +1,17 @@
 ﻿using CharmsBarReloaded.Config;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace CharmsBarReloaded.CharmsBar
-{
+namespace CharmsBarReloaded.CharmsBar {
     /// <summary>
     /// Interaction logic for CharmsBar.xaml
     /// </summary>
-    public partial class CharmsBar : Window
-    {
-        public CharmsBar(ref CharmsClock.CharmsClock charmsClock)
-        {
+    public partial class CharmsBar : Window {
+        public CharmsBar(ref CharmsClock.CharmsClock charmsClock) {
             var charmsClockRef = charmsClock;
             InitializeComponent();
             this.Loaded += CharmsBar_Loaded;
@@ -20,22 +19,29 @@ namespace CharmsBarReloaded.CharmsBar
             this.MouseLeave += (s, e) => { CharmsBar_MouseLeave(ref charmsClockRef); };
             this.MouseMove += (s, e) => { CharmsBar_MouseMove(ref charmsClockRef); };
         }
-        public void HideWindow()
-        {
+        public void HideWindow() {
             BeginAnimation(UIElement.OpacityProperty, fadeOut);
-            foreach (Grid grid in charmsStack.Children)
-            {
-                foreach (var item in grid.Children)
-                {
-                    if (item.GetType() == typeof(Image))
-                    {
+            foreach (Grid grid in charmsStack.Children) {
+                foreach (var item in grid.Children) {
+                    if (item.GetType() == typeof(Image)) {
                         string source = ((Image)item).Source.ToString();
-                        if (!source.Contains("Preview")) ((Image)item).Source = new BitmapImage(new Uri(source.Insert(source.LastIndexOf(".png"), "Preview")));
+                        if (!source.Contains("Preview")) {
+                            source = source.Insert(source.LastIndexOf(".png"), "Preview");
+                        }
+                        ((Image)item).Source = new BitmapImage(new Uri(source));
                     }
                     if (item.GetType() == typeof(Label))
                         ((Label)item).Visibility = Visibility.Collapsed;
-                    if (item.GetType() == typeof(Grid))
-                        ((Grid)item).Background = GetBrush.GetSpecialBrush("White");
+                    if (item.GetType() == typeof(Grid)) {
+                        string source = ((Grid)item).Tag.ToString();
+                        if (!source.Contains("Preview")) {
+                            source = source.Insert(source.LastIndexOf(".png"), "Preview");
+                        }
+
+                        ((Grid)item).Background = new ImageBrush(new BitmapImage(new Uri(source)));
+                        ((Grid)item).OpacityMask = null;
+
+                    }
                 }
             }
         }
@@ -46,18 +52,16 @@ namespace CharmsBarReloaded.CharmsBar
         private int mouseState = 0;
         private double lastMouseY;
 
-        public void Window_Reload()
-        {
+        public void Window_Reload() {
             Log.Info("Reloading Charms Bar...");
             InitializeAnimations();
             SetupButtons();
-            
+
             this.Background = GetBrush.GetBrushFromHex(App.charmsConfig.charmsBarConfig.BackgroundColor);
             PrepareButtons(App.charmsConfig.EnableAnimations);
             HideWindow();
         }
-        private void FadeOut_Completed(object? sender, EventArgs e)
-        {
+        private void FadeOut_Completed(object? sender, EventArgs e) {
             PrepareButtons(false);
             isAnimating = false;
             windowVisible = false;
@@ -65,9 +69,9 @@ namespace CharmsBarReloaded.CharmsBar
             charmsStack.Visibility = Visibility.Collapsed;
             BeginAnimation(OpacityProperty, backTo1Opacity);
         }
-        private void CharmsBar_Loaded(object sender, RoutedEventArgs e)
-        {
+        private void CharmsBar_Loaded(object sender, RoutedEventArgs e) {
             this.Topmost = true;
+
             this.Window_Reload();
             this.Left = SystemConfig.GetDesktopWorkingArea.Right - this.Width;
             this.charmsStack.Width = this.windowWidth;
@@ -75,8 +79,7 @@ namespace CharmsBarReloaded.CharmsBar
             this.MinHeight = SystemParameters.PrimaryScreenHeight - 1;
             this.Height = SystemParameters.PrimaryScreenHeight;
         }
-        private void CharmsBar_MouseLeave(ref CharmsClock.CharmsClock charmsClock)
-        {
+        private void CharmsBar_MouseLeave(ref CharmsClock.CharmsClock charmsClock) {
             if (mouseState == 2) {
                 mouseState = 0;
                 HideWindow();
@@ -84,17 +87,15 @@ namespace CharmsBarReloaded.CharmsBar
                     charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.fadeOut);
                 else
                     charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.noAnimationOut);
-
-                this.Topmost = true;
             }
         }
-        private void CharmsBar_MouseEnter(ref CharmsClock.CharmsClock charmsClock)
-        {
+        private void CharmsBar_MouseEnter(ref CharmsClock.CharmsClock charmsClock) {
             if (mouseState == 0) {
                 Point cursorPos = SystemConfig.GetMouseLocation;
                 lastMouseY = cursorPos.Y;
 
                 mouseState = 1;
+
             }
         }
 
@@ -103,12 +104,12 @@ namespace CharmsBarReloaded.CharmsBar
                 Point cursorPos = SystemConfig.GetMouseLocation;
                 double yOffset = Math.Abs(lastMouseY - cursorPos.Y);
 
-                if (cursorPos.X + 1 != System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width) {
+                if (cursorPos.X + 10.0 < System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width) {
                     mouseState = 0;
                     HideWindow();
                 }
 
-                if (cursorPos.X + 1 == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width && yOffset > 50.0) {
+                if (cursorPos.X + 10.0 >= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width && yOffset > 50.0) {
                     mouseState = 2;
 
                     if (!isAnimating) {
@@ -123,38 +124,42 @@ namespace CharmsBarReloaded.CharmsBar
                         foreach (var item in grid.Children) {
                             if (item.GetType() == typeof(Image)) {
                                 string source = ((Image)item).Source.ToString();
-                                ((Image)item).Source = new BitmapImage(new Uri(source.Replace("Preview", "")));
+                                if (source.Contains("Preview")) {
+                                    source = source.Replace("Preview", "");
+                                }
+                                ((Image)item).Source = new BitmapImage(new Uri(source));
                             }
                             if (item.GetType() == typeof(Label))
                                 ((Label)item).Visibility = Visibility.Visible;
-                            if (item.GetType() == typeof(Grid))
-                                ((Grid)item).Background = SystemConfig.GetAccentColor;
+                            if (item.GetType() == typeof(Grid)) {
+                                string source = ((Grid)item).Tag.ToString();
+                                if (source.Contains("Preview")) {
+                                    source = source.Replace("Preview", "");
+                                }
+
+                                ((Grid)item).Background = SystemColors.AccentColorBrush;
+                                ((Grid)item).OpacityMask = new ImageBrush(new BitmapImage(new Uri(source)));
+                            }
                         }
                     }
                 }
 
-                this.Topmost = true;
             }
         }
 
-        public void CharmsBar_Update(ref CharmsClock.CharmsClock charmsClock)
-        {
+        public void CharmsBar_Update(ref CharmsClock.CharmsClock charmsClock) {
             Point cursorPos = SystemConfig.GetMouseLocation;
 
-            if (cursorPos.X + 1 == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width && cursorPos.Y == SystemConfig.GetDesktopWorkingArea.Top && App.charmsConfig.charmsBarConfig.IsEnabled && !windowVisible)
-            {
+            if (cursorPos.X + 1 == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width && cursorPos.Y == SystemConfig.GetDesktopWorkingArea.Top && App.charmsConfig.charmsBarConfig.IsEnabled && !windowVisible) {
                 this.windowVisible = true;
-                if (!isAnimating)
-                {
+                if (!isAnimating) {
                     this.Background = GetBrush.GetSpecialBrush("Transparent");
                     this.charmsStack.Visibility = Visibility.Visible;
                     SlideInButtons();
                 }
             }
-            if (Keyboard.IsKeyDown(Key.LWin) && Keyboard.IsKeyDown(Key.C) && App.charmsConfig.charmsBarConfig.EnableKeyboardShortcut && (App.charmsConfig.charmsBarConfig.IsEnabled || App.charmsConfig.charmsBarConfig.KeyboardShortcutOverridesOffSetting))
-            {
-                if (!isAnimating && !windowVisible)
-                {
+            if (Keyboard.IsKeyDown(Key.LWin) && Keyboard.IsKeyDown(Key.C) && App.charmsConfig.charmsBarConfig.EnableKeyboardShortcut && (App.charmsConfig.charmsBarConfig.IsEnabled || App.charmsConfig.charmsBarConfig.KeyboardShortcutOverridesOffSetting)) {
+                if (!isAnimating && !windowVisible) {
                     this.Background = GetBrush.GetBrushFromHex(App.charmsConfig.charmsBarConfig.BackgroundColor);
                     charmsStack.Visibility = Visibility.Visible;
                     windowVisible = true;
@@ -165,27 +170,32 @@ namespace CharmsBarReloaded.CharmsBar
                         charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.fadeIn);
                     else
                         charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.noAnimationIn);
-                    foreach (Grid grid in charmsStack.Children)
-                    {
-                        foreach (var item in grid.Children)
-                        {
-                            if (item.GetType() == typeof(Image))
-                            {
+                    foreach (Grid grid in charmsStack.Children) {
+                        foreach (var item in grid.Children) {
+                            if (item.GetType() == typeof(Image)) {
                                 string source = ((Image)item).Source.ToString();
-                                ((Image)item).Source = new BitmapImage(new Uri(source.Replace("Preview", "")));
+                                if (source.Contains("Preview")) {
+                                    source = source.Replace("Preview", "");
+                                }
+                                ((Image)item).Source = new BitmapImage(new Uri(source));
                             }
                             if (item.GetType() == typeof(Label))
                                 ((Label)item).Visibility = Visibility.Visible;
-                            if (item.GetType() == typeof(Grid))
-                                ((Grid)item).Background = SystemConfig.GetAccentColor;
+                            if (item.GetType() == typeof(Grid)) {
+                                string source = ((Grid)item).Tag.ToString();
+                                if (source.Contains("Preview")) {
+                                    source = source.Replace("Preview", "");
+                                }
+
+                                ((Grid)item).Background = SystemColors.AccentColorBrush;
+                                ((Grid)item).OpacityMask = new ImageBrush(new BitmapImage(new Uri(source)));
+                            }
                         }
                     }
                 }
                 this.Height = SystemParameters.PrimaryScreenHeight;
-                this.Topmost = true;
             }
-            if (Keyboard.IsKeyDown(Key.Escape) && App.charmsConfig.charmsBarConfig.EnableKeyboardShortcut)
-            {
+            if (Keyboard.IsKeyDown(Key.Escape) && App.charmsConfig.charmsBarConfig.EnableKeyboardShortcut) {
                 this.HideWindow();
                 if (App.charmsConfig.EnableAnimations && charmsClock.Opacity != 0)
                     charmsClock.BeginAnimation(UIElement.OpacityProperty, charmsClock.fadeOut);

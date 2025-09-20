@@ -49,24 +49,24 @@ namespace CharmsBarReloaded.CharmsBar
 
                 //image source
                 BitmapImage image = new BitmapImage(new Uri($"pack://application:,,,/Assets/CharmsBar/{action}.png"));
-                if (App.charmsConfig.charmsBarConfig.UsesDynamicColor[i - 1])
-                    buttons[i].Children.Add(new Grid
-                    {
+                if (App.charmsConfig.charmsBarConfig.UsesDynamicColor[i - 1]) {
+                    Grid grid = new Grid {
                         Height = 48,
                         Width = 48,
                         Margin = new Thickness(0, 18.01, 0, 0),
                         VerticalAlignment = VerticalAlignment.Top,
-                        OpacityMask = new ImageBrush(image),
-                        Background = SystemConfig.GetAccentColor
-                    });
-                else
-                    buttons[i].Children.Add(new Image
-                    {
+                    };
+                    grid.Tag = image.ToString();
+                    buttons[i].Children.Add(grid);
+                }
+                else {
+                    buttons[i].Children.Add(new Image {
                         Height = 48,
                         Margin = new Thickness(0, 18, 0, 0),
                         VerticalAlignment = VerticalAlignment.Top,
                         Source = image
                     });
+                }
                 buttons[i].Children.Add(new Label
                 {
                     Foreground = GetBrush.GetBrushFromHex(App.charmsConfig.charmsBarConfig.TextColor),

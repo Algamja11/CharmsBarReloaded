@@ -19,6 +19,7 @@ namespace CharmsBarReloaded.CharmsClock
         }
         private void CharmsClock_Loaded(object sender, RoutedEventArgs e)
         {
+            this.Topmost = true;
             this.Top = SystemConfig.GetDesktopWorkingArea.Bottom - 188;
             this.Left = 50;
             if (!App.charmsConfig.charmsClockConfig.SyncClockSettings)

@@ -4,27 +4,35 @@
                     x:Class="CharmsBarReloaded.Tray.Tray">
     <ContextMenu x:Shared="false" x:Key="CharmsTray" Opened="ContextMenu_Opened">
         <MenuItem Header="CharmsBar: Reloaded" IsEnabled="False">
+            <!--
             <MenuItem.Icon>
                 <Image Source="pack://application:,,,/assets/DarkIcon.png"/>
             </MenuItem.Icon>
+            -->
         </MenuItem>
         <Separator/>
         <MenuItem IsChecked="True"  Header="Enable Charms Bar" Click="ToggleCharmsBar" x:Name="checkmark"/>
         <Separator/>
         <MenuItem Header="Settings" Click="OpenSettings" x:Name="openSettings">
+            <!--
             <MenuItem.Icon>
                 <Image Source="pack://application:,,,/assets/CharmsBar/SettingsDark.png"/>
             </MenuItem.Icon>
+            -->
         </MenuItem>
         <MenuItem Header="Check for updates" Click="CheckForUpdates" x:Name="checkForUpdates">
+            <!--
             <MenuItem.Icon>
                 <Image Source="pack://application:,,,/assets/UpdaterIcon.png"/>
             </MenuItem.Icon>
+             -->
         </MenuItem>
         <MenuItem Header="Exit" Click="ExitApp" x:Name="exitApp">
+            <!--
             <MenuItem.Icon>
                 <Image Source="pack://application:,,,/assets/tray/Exit.png"/>
             </MenuItem.Icon>
+            -->
         </MenuItem>
     </ContextMenu>
 

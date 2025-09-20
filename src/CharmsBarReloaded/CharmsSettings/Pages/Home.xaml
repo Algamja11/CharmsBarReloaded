@@ -41,14 +41,23 @@
         <TextBlock x:Name="Separator2" Grid.Row="1"/>
         <TextBlock x:Name="Separator3" Grid.Row="2"/>
 
+
         <StackPanel Grid.Row="0" Margin="0">
             <StackPanel Margin="40, 40, 0 ,0">
                 <TextBlock Text="Settings" FontSize="30px" Foreground="White" FontWeight="Thin" x:Name="settingsTitle" FontFamily="Segoe UI"/>
-                <!-- Application settings -->
-                <TextBlock Text="CharmsBar: Reloaded settings" Foreground="Gray" Margin="0, 10, 0, 0" x:Name="settingsSubTitle" FontFamily="Segoe UI Semilight"/>
             </StackPanel>
             <!-- OS settings, will only open MSsettings or Control Panel-->
 
+            <TextBlock Text="Desktop" Foreground="Gray" Margin="40, 20, 0, 20" x:Name="osSettingsSubTitle" FontFamily="Segoe UI Semilight"/>
+            <StackPanel Margin="0, 0, 0, 0">
+                <Grid Height="50" Style="{StaticResource OnHover}" MouseDown="ControlPanel_MouseDown">
+                    <Label Width="360" Height="50"/>
+                    <TextBlock Text="Control Panel" Foreground="White" FontSize="17px" VerticalAlignment="Center" Margin="40, 0, 0, 0" x:Name="controlPanel" FontFamily="Segoe UI"/>
+                </Grid>
+            </StackPanel>
+
+            <TextBlock Text="CharmsBar: Reloaded" Foreground="Gray" Margin="40, 20, 0, 10" x:Name="settingsSubTitle" FontFamily="Segoe UI Semilight"/>
+            
             <StackPanel Margin="0, 15, 0, 0">
                 <Grid Height="50" Style="{StaticResource OnHover}" MouseDown="General_MouseDown">
                     <Label Width="360" Height="50"/>
@@ -63,18 +72,7 @@
                     <TextBlock Text="About" Foreground="White" FontSize="17px" Margin="40, 0, 0, 0" VerticalAlignment="Center" x:Name="aboutSettings" FontFamily="Segoe UI"/>
                 </Grid>
 
-                <!-- OS Settings -->
-                <TextBlock Text="OS Settings" Foreground="Gray" Margin="40, 20, 0, 10" x:Name="osSettingsSubTitle" FontFamily="Segoe UI Semilight"/>
-                <StackPanel Margin="0, 0, 0, 0">
-                    <Grid Height="50" Style="{StaticResource OnHover}" MouseDown="OsSettings_MouseDown">
-                        <Label Width="360" Height="50"/>
-                        <TextBlock Text="Settings" Foreground="White" FontSize="17px" VerticalAlignment="Center" Margin="40, 0, 0, 0" x:Name="osSettings" FontFamily="Segoe UI"/>
-                    </Grid>
-                    <Grid Height="50" Style="{StaticResource OnHover}" MouseDown="ControlPanel_MouseDown">
-                        <Label Width="360" Height="50"/>
-                        <TextBlock Text="Control Panel" Foreground="White" FontSize="17px" VerticalAlignment="Center" Margin="40, 0, 0, 0" x:Name="controlPanel" FontFamily="Segoe UI"/>
-                    </Grid>
-                </StackPanel>
+
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="2"/>
@@ -164,6 +162,14 @@
                     </StackPanel>
                 </Grid>
             </Grid>
+
+            <!-- OS Settings -->
+            <StackPanel Margin="0, -50, 0, 40">
+                <Grid Height="50" Style="{StaticResource OnHover}" MouseDown="OsSettings_MouseDown">
+                    <Label Width="360" Height="50"/>
+                    <TextBlock Text="Change PC Settings" Foreground="White" FontSize="17px" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="00, 0, 40, 0" x:Name="osSettings" FontFamily="Segoe UI"/>
+                </Grid>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>
